@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/orion0616/sealion/todoist"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,42 @@ var todayCmd = &cobra.Command{
 	Use:   "today",
 	Short: "Total time of today's tasks",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("today called")
+		client, err := todoist.NewClient()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		labels := []string{
+			"5分",
+			"15分",
+			"30分",
+			"1時間",
+		}
+		time := []int{
+			5, 15, 30, 60,
+		}
+		labelIDs, err := client.CreateLabelIDs(labels)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		tasks, err := client.GetAllTasks()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		sum := 0
+		for _, task := range tasks {
+			// TODO: filtering
+			for _, label := range task.Labels {
+				for i, id := range labelIDs {
+					if label == id {
+						sum += time[i]
+					}
+				}
+			}
+		}
+		fmt.Printf("Sum: %2dh %2dm\n", sum/60, sum%60)
 	},
 }
 
