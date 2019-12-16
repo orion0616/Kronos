@@ -32,6 +32,26 @@ var restCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
+
+		projects, err := client.GetProjects()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		var routineIDs []int
+		routines := []string{
+			"Daily Routine",
+			"Weekly Routine",
+			"Monthly Routine",
+			"3Month Routine",
+		}
+		for _, project := range projects {
+			for _, routine := range routines {
+				if project.Name == routine {
+					routineIDs = append(routineIDs, project.ID)
+				}
+			}
+		}
 		labels := []string{
 			"5分",
 			"15分",
@@ -53,6 +73,15 @@ var restCmd = &cobra.Command{
 		}
 		sum := 0
 		for _, task := range tasks {
+			isRoutine := false
+			for _, routine := range routineIDs {
+				if int64(routine) == task.ProjectID {
+					isRoutine = true
+				}
+			}
+			if isRoutine {
+				continue
+			}
 			for _, label := range task.Labels {
 				for i, id := range labelIDs {
 					if label == id {
