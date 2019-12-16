@@ -72,6 +72,7 @@ var restCmd = &cobra.Command{
 			return
 		}
 		sum := 0
+		sumRoutine := 0
 		for _, task := range tasks {
 			isRoutine := false
 			for _, routine := range routineIDs {
@@ -80,6 +81,13 @@ var restCmd = &cobra.Command{
 				}
 			}
 			if isRoutine {
+				for _, label := range task.Labels {
+					for i, id := range labelIDs {
+						if label == id {
+							sumRoutine += time[i]
+						}
+					}
+				}
 				continue
 			}
 			for _, label := range task.Labels {
@@ -90,7 +98,8 @@ var restCmd = &cobra.Command{
 				}
 			}
 		}
-		fmt.Printf("%dh %dm\n", sum/60, sum%60)
+		fmt.Printf("Sum    : %2dh %2dm\nRoutine: %2dh %2dm\n",
+			sum/60, sum%60, sumRoutine/60, sumRoutine%60)
 	},
 }
 
