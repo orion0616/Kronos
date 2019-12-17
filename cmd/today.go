@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/orion0616/sealion/todoist"
 	"github.com/spf13/cobra"
@@ -53,7 +54,9 @@ var todayCmd = &cobra.Command{
 		}
 		sum := 0
 		for _, task := range tasks {
-			// TODO: filtering
+			if task.Due.Date != Today() {
+				continue
+			}
 			for _, label := range task.Labels {
 				for i, id := range labelIDs {
 					if label == id {
@@ -64,6 +67,11 @@ var todayCmd = &cobra.Command{
 		}
 		fmt.Printf("Sum: %2dh %2dm\n", sum/60, sum%60)
 	},
+}
+
+func Today() string {
+	const layout = "2006-01-02"
+	return time.Now().Format(layout)
 }
 
 func init() {
