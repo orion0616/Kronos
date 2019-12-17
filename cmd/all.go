@@ -22,10 +22,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// restCmd represents the rest command
-var restCmd = &cobra.Command{
-	Use:   "rest",
-	Short: "Calculate the rest of time of tasks.",
+// allCmd represents the all command
+var allCmd = &cobra.Command{
+	Use:   "all",
+	Short: "Calculate the all of time of tasks.",
 	Run: func(cmd *cobra.Command, args []string) {
 		client, err := todoist.NewClient()
 		if err != nil {
@@ -104,15 +104,5 @@ var restCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(restCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// restCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// restCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(allCmd)
 }
